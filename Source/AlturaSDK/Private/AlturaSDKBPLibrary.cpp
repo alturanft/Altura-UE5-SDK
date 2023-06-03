@@ -212,12 +212,8 @@ FString UAlturaSDKBPLibrary::AppendToUrlWithQ(const FString& BaseUrl, const TMap
 
 void UAlturaSDKBPLibrary::VerifyAlturaGuardCode(const FString Address, const FString Code , const FResponse& OnComplete)
 {
-	TMap<FString, FString> Params;
-	Params.Add("address", Address);
-	Params.Add("code", Code);
-	FString url = AppendToUrlWithQ("https://api.alturanft.com/api/v2/user/verify_auth_code",Params);
-
-	MakeAHttpRequest(url, Params, TMap<FString, FString>(), FString(), OnComplete);
+    FString url = FString::Printf(TEXT("https://api.alturanft.com/api/v2/user/verify_auth_code/%s/%s"), *Address, *Code);
+	MakeAHttpRequest(url, TMap<FString, FString>(), TMap<FString, FString>(), FString(), OnComplete);
 }
 
 void UAlturaSDKBPLibrary::GetUser(const FString Address, const FResponse& OnComplete)
@@ -819,12 +815,10 @@ FUserAuth UAlturaSDKBPLibrary::ParseVerifyAlturaGuardCode(const FString& Respons
 {
 	FUserAuth UserAuth;
 
-	FAlturaJSONObject JSONObject = ResponseStringToJSON(ResponseString);
-	FAlturaJSONObject UserObject = GetObjectFromJSONObject(JSONObject, "user");
-
-	UserAuth.Address = GetStringFromJSONObject(UserObject, "address");
-	UserAuth.Name = GetStringFromJSONObject(UserObject, "name");
-	UserAuth.GuardCode = GetStringFromJSONObject(UserObject, "guardCode");
+	FAlturaJSONObject JSONObject = ResponseStringToJSON(ResponseString);   
+	FString AuthenticatedString = GetStringFromJSONObject(JSONObject, "authenticated");
+	bool AuthenticatedBool = (AuthenticatedString.ToLower() == "true");
+	UserAuth.Authenticated = AuthenticatedBool ? "true" : "false";
 
 	return UserAuth;
 }
