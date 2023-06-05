@@ -454,14 +454,8 @@ struct FUserAuth
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AlturaSDK")
-		FString Address;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AlturaSDK")
-		FString Name;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AlturaSDK")
-		FString GuardCode;
+	FString Authenticated;
 };
 
 
